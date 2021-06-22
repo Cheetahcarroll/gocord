@@ -12,7 +12,7 @@ const (
 	Kick = ExpireBehavior(1)
 )
 
-// Integration models the integration information for discord
+// Integration models the discord integration object
 type Integration struct {
 	ID                Snowflake              `json:"id"`
 	Name              string                 `json:"name"`
@@ -31,13 +31,13 @@ type Integration struct {
 	Application       IntegrationApplication `json:"application,omitempty"`
 }
 
-// IntegrationAccount models the account use with Integration
+// IntegrationAccount models the discord integration account object
 type IntegrationAccount struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
-// IntegrationApplication models the application used for integration
+// IntegrationApplication models the discord integration application object
 type IntegrationApplication struct {
 	ID          Snowflake `json:"id"`
 	Name        string    `json:"name"`

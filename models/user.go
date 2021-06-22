@@ -1,7 +1,12 @@
 package models
 
+import "strings"
+
 // UserFlag is an int alias for user flags
 type UserFlag int
+
+// VisibilityType is an int alias for visibility
+type VisibilityType int
 
 const (
 	// Indicates a user is a discord employee
@@ -36,9 +41,14 @@ const (
 	EarlyVerifiedBotDeveloper
 	// Indicates a user is a discord certified moderator
 	DiscordCertifiedModerator
+
+	// Invisible indicates the message is only visible to the user
+	Invisible = VisibilityType(0)
+	// Visible indicates the message is visible to everyone
+	Visible = VisibilityType(1)
 )
 
-// User is a struct that models users
+// User is a struct that models the discord user object
 type User struct {
 	ID            Snowflake `json:"id"`
 	Username      string    `json:"username"`
@@ -52,6 +62,19 @@ type User struct {
 	Email         *string   `json:"email,omitempty"`
 	Flags         UserFlag  `json:"flags,omitempty"`
 	PremiumType   int       `json:"premium_type,omitempty"`
+}
+
+// Connection models the discord connection object
+type Connection struct {
+	ID           string         `json:"id"`
+	Name         string         `json:"name"`
+	Type         string         `json:"type"`
+	Revoked      bool           `json:"revoked,omitempty"`
+	Integrations []string       `json:"integrations,omitempty"`
+	Verified     bool           `json:"verified"`
+	FriendSync   bool           `json:"friend_sync"`
+	ShowActivity bool           `json:"show_activity"`
+	Visibility   VisibilityType `json:"visibility"`
 }
 
 // String returns the represented flag value
@@ -96,4 +119,43 @@ func (f UserFlag) String() string {
 		return "Discord Certified Moderator"
 	}
 	return "None"
+}
+
+// ValidateUsername ensures a username is valid
+func ValidateUsername(username string) bool {
+	username = strings.ReplaceAll(strings.Trim(username, " "), "  ", " ")
+
+	if len(username) > 32 || len(username) < 2 {
+		return false
+	}
+
+	if strings.ContainsAny(username, "@#:") || strings.Contains(username, "```") {
+		return false
+	}
+
+	switch username {
+	case "discordtag":
+		return false
+	case "everyone":
+		return false
+	case "here":
+		return false
+	}
+
+	return true
+}
+
+// ValidateNickname ensures a nickname is valid
+func ValidateNickname(nickname string) bool {
+	nickname = strings.ReplaceAll(strings.Trim(nickname, " "), "  ", " ")
+
+	if len(nickname) > 32 || len(nickname) == 0 {
+		return false
+	}
+
+	if strings.ContainsAny(nickname, "@#:") || strings.Contains(nickname, "```") {
+		return false
+	}
+
+	return true
 }

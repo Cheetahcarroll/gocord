@@ -5,7 +5,7 @@ import "time"
 // Snowflake is a uint64 alias for a snowflake in discord
 type Snowflake uint64
 
-// SnowStruct is an object to help build snowflakes
+// SnowStruct is an object to help build discord snowflakes
 type SnowStruct struct {
 	TimeStamp time.Time
 	WorkerID  uint8
